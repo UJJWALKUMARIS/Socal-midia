@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import SingUp from './pages/singUp'
-import SingIn from './pages/singIn'
+import SingUp from './pages/SingUp'
+import SingIn from './pages/SingIn'
 import Home from './pages/Home';
 import ForgotPassword from './pages/ForgotPassword';
 import useGetCurrentUser from './hooks/getCurrentUser';
