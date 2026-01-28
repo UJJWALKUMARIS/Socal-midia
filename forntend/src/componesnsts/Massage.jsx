@@ -58,7 +58,7 @@ function Massage() {
             <div className="flex flex-col">
                 {priviousChatUser && priviousChatUser.length > 0 ? (
                     priviousChatUser.map((user) => {
-                        const isOnline = onlineUser.includes(user._id);
+                        const isOnline = onlineUser?.includes(user._id);
 
                         return (
                             <div
