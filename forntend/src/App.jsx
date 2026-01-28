@@ -29,7 +29,7 @@ import Notification from './pages/Notification';
 import { setNotification } from './redux/userSlice';
 
 
-export const url = "http://localhost:8000";
+export const url = "https://vybe-backend-8yqs.onrender.com";
 function App() {
   useGetCurrentUser();
   getSuggestedUser();
