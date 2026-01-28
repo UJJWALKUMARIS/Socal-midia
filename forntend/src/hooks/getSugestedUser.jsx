@@ -1,28 +1,36 @@
-import React from 'react';
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { url } from "../App";
-import { setSuggestedUser, setUserData } from "../redux/userSlice";
-import { useEffect } from 'react';
+import { setSuggestedUser } from "../redux/userSlice";
 
-function getSuggestedUser() {
+function useGetSuggestedUser() {
   const dispatch = useDispatch();
-  const userData = useSelector(state=>state.user)
+  const suggestedUsers = useSelector(
+    (state) => state.user.suggestedUser
+  );
 
   useEffect(() => {
+    // prevent refetch loop
+    if (suggestedUsers?.length > 0) return;
+
     const fetchUser = async () => {
       try {
-        const result = await axios.get(`${url}/api/user/suggested`, {
-          withCredentials: true,
-        });
-        dispatch(setSuggestedUser(result.data)); // ✅ save user data in Redux
+        const result = await axios.get(
+          `${url}/api/user/suggested`,
+          { withCredentials: true }
+        );
+        dispatch(setSuggestedUser(result.data));
       } catch (error) {
-        console.error("Failed to sugested user:", error.response?.data || error.message);
+        console.error(
+          "Failed to suggested user:",
+          error.response?.data || error.message
+        );
       }
     };
 
     fetchUser();
-  }, [userData]);
+  }, [dispatch]); // ✅ stable dependency
 }
 
-export default getSuggestedUser;
+export default useGetSuggestedUser;
