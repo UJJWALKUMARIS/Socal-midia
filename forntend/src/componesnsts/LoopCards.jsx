@@ -87,7 +87,7 @@ function LoopCards({ loop, isActive, isPlaying, onTogglePlay, onLoopUpdate }) {
     setTimeout(() => setShowHeart(false), 800);
 
     // Like only if not already liked
-    if (!currentLoop.likes.includes(userData._id)) {
+    if (!currentLoop?.likes?.includes(userData._id)) {
       setLikeLoading(true);
       try {
         const result = await axios.get(`${url}/api/loop/likes/${currentLoop._id}`, {
