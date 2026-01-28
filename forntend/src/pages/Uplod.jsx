@@ -8,7 +8,7 @@ import { setStoryData } from "../redux/storySlice";
 import { setPostData } from "../redux/postSlice";
 import { setLoopData } from "../redux/loopSlice";
 
-const API_BASE_URL = "http://localhost:8000/api";
+const API_BASE_URL = "https://vybe-backend-8yqs.onrender.com/api";
 
 function Upload() {
   const nav = useNavigate();
