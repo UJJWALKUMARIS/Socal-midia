@@ -85,7 +85,7 @@ function App() {
       <Route path='/singup' element={!userData ? <SingUp/>:<Navigate to="/" replace/>}/>
       <Route path="/singin" element={!userData ? <SingIn/>:<Navigate to="/" replace/>}/>
       <Route path="/resetpassword" element={!userData ? <ForgotPassword/>:<SingIn/>}/>
-      <Route path='/uplod' element={userData ? <Upload/> : <Navigate to="/singin" replace />>}/>
+      <Route path='/uplod' element={userData ? <Upload/> : <Navigate to="/singin" replace />}/>
       <Route path="/profile/:userName"element={userData ? <Profile /> :<Navigate to="/singin" replace />>}/>
       <Route path="/loop" element={userData ? <Loop /> : <Navigate to="/singin" replace />}/>
       <Route path="/story/:userName" element={userData ? <Story/> : <Navigate to="/singin" replace />}/> 
