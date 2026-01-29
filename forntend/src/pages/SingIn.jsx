@@ -95,14 +95,14 @@ function Singin() {
 
             </div>
             <br />
-            <p className='mt-2 w-[90%] px-[10px]'>
+            {/*<p className='mt-2 w-[90%] px-[10px]'>
               Forgot password?{" "}
               <Link to="/resetpassword" className='text-blue-600 hover:underline font-semibold'>
                 Reset Now
               </Link>
             </p>
 
-            {error && <p className='text-red-500'>{error}</p>}
+            {error && <p className='text-red-500'>{error}</p>}*/}
 
             
             {/* Signup Button */}
