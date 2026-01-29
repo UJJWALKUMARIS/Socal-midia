@@ -183,9 +183,9 @@ function Post({ post }) {
                             className="text-gray-600 hover:text-red-500 transition flex items-center gap-1 text-sm sm:text-base"
                             onClick={like}
                         >
-                            {!post.likes.includes(userData._id) && <GoHeart />}
-                            {post.likes.includes(userData._id) && <GoHeartFill className='text-red-600' />}
-                            {post.likes.length}
+                            {!post?.likes?.includes(userData._id) && <GoHeart />}
+                            {post?.likes?.includes(userData._id) && <GoHeartFill className='text-red-600' />}
+                            {post?.likes?.length}
                         </button>
                         <button
                             className="text-gray-600 hover:text-blue-500 transition flex items-center gap-1 text-sm sm:text-base"

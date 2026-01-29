@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import SingUp from './pages/singUp'
-import SingIn from './pages/singIn'
+import SingUp from './pages/SingUp'
+import SingIn from './pages/SingIn'
 import Home from './pages/Home';
 import ForgotPassword from './pages/ForgotPassword';
 import useGetCurrentUser from './hooks/getCurrentUser';
@@ -29,7 +29,7 @@ import Notification from './pages/Notification';
 import { setNotification } from './redux/userSlice';
 
 
-export const url = "http://localhost:8000";
+export const url = "https://vybe-backend-8yqs.onrender.com";
 function App() {
   useGetCurrentUser();
   getSuggestedUser();
@@ -81,12 +81,12 @@ function App() {
 
   return (
     <Routes>
-      <Route path='/' element={userData ? <Home/>:<Navigate to="/singin" replace/>}/>
+      <Route path='/' element={userData ? <Home/>:<Navigate to="/singin" replace />}/>
       <Route path='/singup' element={!userData ? <SingUp/>:<Navigate to="/" replace/>}/>
       <Route path="/singin" element={!userData ? <SingIn/>:<Navigate to="/" replace/>}/>
-      <Route path="/resetpassword" element={!userData ? <ForgotPassword/>:<Navigate to="/" replace/>}/>
-      <Route path='/uplod' element={userData ? <Upload/> : <Navigate to="/singin" replace/>}/>
-      <Route path="/profile/:userName"element={userData ? <Profile /> : <Navigate to="/singin" replace />}/>
+      <Route path="/resetpassword" element={!userData ? <ForgotPassword/>:<SingIn/>}/>
+      <Route path='/uplod' element={userData ? <Upload/> : <Navigate to="/singin" replace />}/>
+      <Route path="/profile/:userName"element={userData ? <Profile /> :<Navigate to="/singin" replace />}/>
       <Route path="/loop" element={userData ? <Loop /> : <Navigate to="/singin" replace />}/>
       <Route path="/story/:userName" element={userData ? <Story/> : <Navigate to="/singin" replace />}/> 
       <Route path="/editprofile" element={userData ? <EditProfile /> : <Navigate to="/singin" replace />}/>

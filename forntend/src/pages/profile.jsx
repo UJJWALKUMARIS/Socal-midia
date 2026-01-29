@@ -103,7 +103,7 @@ function Profile() {
 
   const savedPostIds = userData?.saved || []
   const savedPosts =
-    postData?.filter(p => savedPostIds.includes(p._id)) || []
+    postData?.filter(p => savedPostIds?.includes(p._id)) || []
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-b from-black via-[#0b0b0b] to-[#121212] text-white">
