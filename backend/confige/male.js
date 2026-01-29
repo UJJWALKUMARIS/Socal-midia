@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
@@ -7,16 +8,19 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: process.env.BREVO_USER,
-    pass: process.env.BREVO_PASS,
+    user: process.env.BREVO_USER, // SMTP LOGIN
+    pass: process.env.BREVO_PASS, // SMTP KEY
   },
-  tls: {
-    rejectUnauthorized: false,
-  },
-  
+  tls: { rejectUnauthorized: false },
   connectionTimeout: 15000,
   greetingTimeout: 15000,
   socketTimeout: 15000,
+});
+
+/* 🔍 DEBUG */
+transporter.verify((err) => {
+  if (err) console.error("SMTP ERROR ❌", err);
+  else console.log("SMTP CONNECTED ✅");
 });
 
 const otpTemplate = (title, subtitle, otp, color) => `
@@ -25,40 +29,13 @@ const otpTemplate = (title, subtitle, otp, color) => `
       <h2 style="color:${color}; text-align:center;">${title}</h2>
       <p>Hello 👋</p>
       <p>${subtitle}</p>
-      <div style="
-        text-align:center;
-        font-size:32px;
-        letter-spacing:8px;
-        font-weight:bold;
-        background:#f1f3f4;
-        padding:15px;
-        border-radius:8px;
-        margin:20px 0;
-        user-select: all;
-      ">
+      <div style="text-align:center;font-size:32px;letter-spacing:8px;font-weight:bold;background:#f1f3f4;padding:15px;border-radius:8px;margin:20px 0;">
         ${otp}
       </div>
-      <div style="text-align:center;">
-        <span style="
-          display:inline-block;
-          padding:10px 18px;
-          background:${color};
-          color:white;
-          border-radius:6px;
-          font-size:14px;
-        ">
-          📋 Tap & Hold to Copy OTP
-        </span>
-      </div>
-      <p style="margin-top:20px;">
-        ⏰ This OTP is valid for <b>5 minutes</b>. Do not share it with anyone.
-      </p>
-      <p style="color:#555;">
-        If you did not request this, please ignore this email.
-      </p>
-      <hr style="margin:25px 0;" />
-      <p style="font-size:12px; color:#888; text-align:center;">
-        © ${new Date().getFullYear()} Vybe. All rights reserved.
+      <p>⏰ OTP valid for <b>5 minutes</b>. Do not share it.</p>
+      <hr />
+      <p style="font-size:12px;text-align:center;">
+        © ${new Date().getFullYear()} Vybe
       </p>
     </div>
   </div>
@@ -66,9 +43,10 @@ const otpTemplate = (title, subtitle, otp, color) => `
 
 export const sendSignupMail = async (to, otp) => {
   await transporter.sendMail({
-    from: `"Vybe Security" <${process.env.BREVO_USER}>`,
+    from: `"Vybe Security" <${process.env.BREVO_FROM}>`,
     to,
-    subject: "Welcome to Vybe",
+    subject: "Welcome to Vybe 🎉",
+    text: `Your OTP is ${otp}. Valid for 5 minutes.`,
     html: otpTemplate(
       "Welcome to Vybe 🎉",
       "Use the OTP below to verify your account:",
@@ -80,9 +58,10 @@ export const sendSignupMail = async (to, otp) => {
 
 export const sendResetMail = async (to, otp) => {
   await transporter.sendMail({
-    from: `"Vybe Security" <${process.env.BREVO_USER}>`,
+    from: `"Vybe Security" <${process.env.BREVO_FROM}>`,
     to,
-    subject: "Reset Your Password",
+    subject: "Reset Your Password 🔐",
+    text: `Your OTP is ${otp}. Valid for 5 minutes.`,
     html: otpTemplate(
       "Reset Password 🔐",
       "Use the OTP below to reset your password:",
