@@ -162,6 +162,7 @@ export const forgotPasswordOtp = async (req, res) => {
 
     res.status(200).json({ message: "OTP sent to email." });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: error.message });
   }
 };
