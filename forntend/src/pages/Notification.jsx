@@ -6,6 +6,7 @@ import { formatDistanceToNow } from "date-fns";
 import axios from "axios";
 import { url } from "../App.jsx";
 import { setNotification } from "../redux/userSlice.js";
+import dp from '../assets/dp.jpg';
 
 function Notification() {
   const nav = useNavigate();
@@ -77,7 +78,7 @@ function Notification() {
               }`}
             >
               <img
-                src={n.sender.profilePic}
+                src={n.sender?.profilePic || dp}
                 alt={n.sender.userName}
                 className="w-12 h-12 rounded-full object-cover"
               />
