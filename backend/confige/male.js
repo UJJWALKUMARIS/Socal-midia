@@ -3,17 +3,22 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+/* =========================
+   BREVO SMTP TRANSPORTER
+   ========================= */
 const transporter = nodemailer.createTransport({
-  service: "Gmail",
-  port: 465,
-  secure: true,
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false, // MUST be false for 587
   auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASS,
+    user: process.env.BREVO_USER, // a11dxxxx@smtp-brevo.com
+    pass: process.env.BREVO_PASS, // xsmtpsib-xxxx
   },
 });
 
-// Shared OTP template (email-safe copy UX)
+/* =========================
+   OTP EMAIL TEMPLATE
+   ========================= */
 const otpTemplate = (title, subtitle, otp, color) => `
   <div style="font-family: Arial, sans-serif; background:#f4f6f8; padding:20px;">
     <div style="max-width:520px; margin:auto; background:#fff; padding:25px; border-radius:10px;">
@@ -22,7 +27,6 @@ const otpTemplate = (title, subtitle, otp, color) => `
       <p>Hello 👋</p>
       <p>${subtitle}</p>
 
-      <!-- OTP BOX -->
       <div style="
         text-align:center;
         font-size:32px;
@@ -37,7 +41,6 @@ const otpTemplate = (title, subtitle, otp, color) => `
         ${otp}
       </div>
 
-      <!-- COPY LOOK BUTTON -->
       <div style="text-align:center;">
         <span style="
           display:inline-block;
@@ -67,9 +70,12 @@ const otpTemplate = (title, subtitle, otp, color) => `
   </div>
 `;
 
+/* =========================
+   SIGNUP OTP MAIL
+   ========================= */
 export const sendSignupMail = async (to, otp) => {
   await transporter.sendMail({
-    from: `"Vybe Security" <${process.env.EMAIL}>`,
+    from: `"Vybe Security" <${process.env.BREVO_FROM}>`,
     to,
     subject: "Welcome to Vybe",
     html: otpTemplate(
@@ -81,9 +87,12 @@ export const sendSignupMail = async (to, otp) => {
   });
 };
 
+/* =========================
+   RESET PASSWORD OTP MAIL
+   ========================= */
 export const sendResetMail = async (to, otp) => {
   await transporter.sendMail({
-    from: `"Vybe Security" <${process.env.EMAIL}>`,
+    from: `"Vybe Security" <${process.env.BREVO_FROM}>`,
     to,
     subject: "Reset Your Password",
     html: otpTemplate(
