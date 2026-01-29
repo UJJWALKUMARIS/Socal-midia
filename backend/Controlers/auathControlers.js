@@ -22,33 +22,40 @@ export const signUpOtp = async (req, res) => {
       return res.status(400).json({ message: "All fields are required!" });
 
     if (password.length < 6)
-      return res.status(400).json({ message: "Password must be at least 6 characters!" });
+      return res.status(400).json({ message: "Password too short!" });
 
     const exists = await User.findOne({ $or: [{ email }, { userName }] });
-    if (exists) return res.status(400).json({ message: "User already exists!" });
+    if (exists)
+      return res.status(400).json({ message: "User already exists!" });
 
-    // remove old temp user
     await TempUser.deleteOne({ email });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const otp = generateOtp();
+    const otp = Math.floor(100000 + Math.random() * 900000);
 
     await TempUser.create({
       name,
       userName,
       email,
-      password: hashedPassword,
+      password: await bcrypt.hash(password, 10),
       otp: await bcrypt.hash(String(otp), 10),
       otpExpire: Date.now() + 5 * 60 * 1000,
     });
 
+    console.log("📧 Sending OTP to:", email);
     await sendSignupMail(email, otp);
 
-    res.status(200).json({ message: "OTP sent to email. Verify to continue." });
+    res.status(200).json({
+      message: "OTP sent to email. Verify to continue.",
+    });
+
   } catch (error) {
-    res.status(500).json({ message: `Signup OTP error: ${error.message}` });
+    console.log("❌ Signup OTP error:", error.message);
+    res.status(500).json({
+      message: "Failed to send OTP. Try again later.",
+    });
   }
 };
+
 
 /* =========================
    VERIFY OTP → CREATE USER
