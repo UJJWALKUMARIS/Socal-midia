@@ -10,6 +10,13 @@ const transporter = nodemailer.createTransport({
     user: process.env.BREVO_USER,
     pass: process.env.BREVO_PASS,
   },
+  tls: {
+    rejectUnauthorized: false,
+  },
+  
+  connectionTimeout: 15000,
+  greetingTimeout: 15000,
+  socketTimeout: 15000,
 });
 
 const otpTemplate = (title, subtitle, otp, color) => `
