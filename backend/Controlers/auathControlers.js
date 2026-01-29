@@ -30,7 +30,7 @@ export const signUpOtp = async (req, res) => {
 
     await TempUser.deleteOne({ email });
 
-    const otp = Math.floor(100000 + Math.random() * 900000);
+    const otp = generateOtp();
 
     await TempUser.create({
       name,
