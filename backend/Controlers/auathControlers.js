@@ -51,7 +51,7 @@ export const signUpOtp = async (req, res) => {
   } catch (error) {
     console.log("❌ Signup OTP error:", error.message);
     res.status(500).json({
-      message: "Failed to send OTP. Try again later.",
+      message: `Failed to send OTP. Try again later.${error}`,
     });
   }
 };
