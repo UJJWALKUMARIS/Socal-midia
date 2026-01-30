@@ -1,8 +1,12 @@
-import { Resend } from "resend";
+import * as brevo from '@getbrevo/brevo';
 import dotenv from "dotenv";
 dotenv.config();
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const apiInstance = new brevo.TransactionalEmailsApi();
+apiInstance.setApiKey(
+  brevo.TransactionalEmailsApiApiKeys.apiKey,
+  process.env.BREVO_API_KEY
+);
 
 const otpTemplate = (title, subtitle, otp, color) => `
   <div style="font-family: Arial, sans-serif; background:#f4f6f8; padding:20px;">
@@ -36,13 +40,15 @@ const otpTemplate = (title, subtitle, otp, color) => `
   </div>
 `;
 
-
 export const sendSignupMail = async (to, otp) => {
-  await resend.emails.send({
-    from: "Vybe Security <onboarding@resend.dev>",
-    to: [to],
+  await apiInstance.sendTransacEmail({
+    sender: {
+      email: "onboarding@vybe.com",
+      name: "Vybe Security"
+    },
+    to: [{ email: to }],
     subject: "Welcome to Vybe",
-    html: otpTemplate(
+    htmlContent: otpTemplate(
       "Welcome to Vybe 🎉",
       "Use the OTP below to verify your account:",
       otp,
@@ -52,11 +58,14 @@ export const sendSignupMail = async (to, otp) => {
 };
 
 export const sendResetMail = async (to, otp) => {
-  await resend.emails.send({
-    from: "Vybe Security <onboarding@resend.dev>",
-    to: [to],
+  await apiInstance.sendTransacEmail({
+    sender: {
+      email: "onboarding@vybe.com",
+      name: "Vybe Security"
+    },
+    to: [{ email: to }],
     subject: "Reset Your Password",
-    html: otpTemplate(
+    htmlContent: otpTemplate(
       "Reset Password 🔐",
       "Use the OTP below to reset your password:",
       otp,
