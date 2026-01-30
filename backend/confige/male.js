@@ -65,7 +65,7 @@ export const sendSignupMail = async (to, otp) => {
 
 export const sendResetMail = async (to, otp) => {
   await resend.emails.send({
-    from: 'Vybe Security <onboarding@resend.dev>',
+    from: 'Vybe Security <vybe8320@gmail.com>',
     to: [to],
     subject: 'Reset Your Password',
     html: otpTemplate(
