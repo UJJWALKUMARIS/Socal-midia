@@ -1,16 +1,9 @@
-import nodemailer from "nodemailer";
+import { TransactionalEmailsApi, SendSmtpEmail } from '@getbrevo/brevo';
 import dotenv from "dotenv";
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.BREVO_USER,
-    pass: process.env.BREVO_PASS,
-  },
-});
+const apiInstance = new TransactionalEmailsApi();
+apiInstance.setApiKey(0, process.env.BREVO_PASS); // Changed from BREVO_API_KEY to BREVO_PASS
 
 const otpTemplate = (title, subtitle, otp, color) => `
   <div style="font-family: Arial, sans-serif; background:#f4f6f8; padding:20px;">
@@ -58,29 +51,33 @@ const otpTemplate = (title, subtitle, otp, color) => `
 `;
 
 export const sendSignupMail = async (to, otp) => {
-  await transporter.sendMail({
-    from: `"Vybe Security" <${process.env.BREVO_USER}>`,
-    to,
-    subject: "Welcome to Vybe",
-    html: otpTemplate(
-      "Welcome to Vybe 🎉",
-      "Use the OTP below to verify your account:",
-      otp,
-      "#1a73e8"
-    ),
-  });
+  const sendSmtpEmail = new SendSmtpEmail();
+  
+  sendSmtpEmail.subject = "Welcome to Vybe";
+  sendSmtpEmail.htmlContent = otpTemplate(
+    "Welcome to Vybe 🎉",
+    "Use the OTP below to verify your account:",
+    otp,
+    "#1a73e8"
+  );
+  sendSmtpEmail.sender = { name: "Vybe Security", email: process.env.BREVO_FROM };
+  sendSmtpEmail.to = [{ email: to }];
+
+  await apiInstance.sendTransacEmail(sendSmtpEmail);
 };
 
 export const sendResetMail = async (to, otp) => {
-  await transporter.sendMail({
-    from: `"Vybe Security" <${process.env.BREVO_USER}>`,
-    to,
-    subject: "Reset Your Password",
-    html: otpTemplate(
-      "Reset Password 🔐",
-      "Use the OTP below to reset your password:",
-      otp,
-      "#e53935"
-    ),
-  });
+  const sendSmtpEmail = new SendSmtpEmail();
+  
+  sendSmtpEmail.subject = "Reset Your Password";
+  sendSmtpEmail.htmlContent = otpTemplate(
+    "Reset Password 🔐",
+    "Use the OTP below to reset your password:",
+    otp,
+    "#e53935"
+  );
+  sendSmtpEmail.sender = { name: "Vybe Security", email: process.env.BREVO_FROM };
+  sendSmtpEmail.to = [{ email: to }];
+
+  await apiInstance.sendTransacEmail(sendSmtpEmail);
 };
