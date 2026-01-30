@@ -1,28 +1,15 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import dotenv from "dotenv";
-
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  service: "Gmail",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Shared OTP template (email-safe copy UX)
 const otpTemplate = (title, subtitle, otp, color) => `
   <div style="font-family: Arial, sans-serif; background:#f4f6f8; padding:20px;">
     <div style="max-width:520px; margin:auto; background:#fff; padding:25px; border-radius:10px;">
-
       <h2 style="color:${color}; text-align:center;">${title}</h2>
       <p>Hello 👋</p>
       <p>${subtitle}</p>
-
-      <!-- OTP BOX -->
       <div style="
         text-align:center;
         font-size:32px;
@@ -36,8 +23,6 @@ const otpTemplate = (title, subtitle, otp, color) => `
       ">
         ${otp}
       </div>
-
-      <!-- COPY LOOK BUTTON -->
       <div style="text-align:center;">
         <span style="
           display:inline-block;
@@ -50,15 +35,12 @@ const otpTemplate = (title, subtitle, otp, color) => `
           📋 Tap & Hold to Copy OTP
         </span>
       </div>
-
       <p style="margin-top:20px;">
         ⏰ This OTP is valid for <b>5 minutes</b>. Do not share it with anyone.
       </p>
-
       <p style="color:#555;">
         If you did not request this, please ignore this email.
       </p>
-
       <hr style="margin:25px 0;" />
       <p style="font-size:12px; color:#888; text-align:center;">
         © ${new Date().getFullYear()} Vybe. All rights reserved.
@@ -68,10 +50,10 @@ const otpTemplate = (title, subtitle, otp, color) => `
 `;
 
 export const sendSignupMail = async (to, otp) => {
-  await transporter.sendMail({
-    from: `"Vybe Security" <${process.env.EMAIL}>`,
-    to,
-    subject: "Welcome to Vybe",
+  await resend.emails.send({
+    from: 'Vybe Security <onboarding@resend.dev>',
+    to: [to],
+    subject: 'Welcome to Vybe',
     html: otpTemplate(
       "Welcome to Vybe 🎉",
       "Use the OTP below to verify your account:",
@@ -82,10 +64,10 @@ export const sendSignupMail = async (to, otp) => {
 };
 
 export const sendResetMail = async (to, otp) => {
-  await transporter.sendMail({
-    from: `"Vybe Security" <${process.env.EMAIL}>`,
-    to,
-    subject: "Reset Your Password",
+  await resend.emails.send({
+    from: 'Vybe Security <onboarding@resend.dev>',
+    to: [to],
+    subject: 'Reset Your Password',
     html: otpTemplate(
       "Reset Password 🔐",
       "Use the OTP below to reset your password:",
