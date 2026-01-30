@@ -162,6 +162,7 @@ export const forgotPasswordOtp = async (req, res) => {
 
     res.status(200).json({ message: "OTP sent to email." });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: error.message });
   }
 };
@@ -304,5 +305,57 @@ export const deleteUser = async (req, res) => {
     return res.status(500).json({
       message: `${error}`,
     });
+  }
+};
+
+/* =========================
+   SIMPLE SIGNUP (NO OTP)
+========================= */
+export const simpleSignUp = async (req, res) => {
+  try {
+    const { name, userName, email, password } = req.body;
+
+    if (!name || !userName || !email || !password) {
+      return res.status(400).json({ message: "All fields are required!" });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters!" });
+    }
+
+    const exists = await User.findOne({
+      $or: [{ email }, { userName }],
+    });
+
+    if (exists) {
+      return res.status(400).json({ message: "User already exists!" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      name,
+      userName,
+      email,
+      password: hashedPassword,
+    });
+
+    const token = await genToken(user._id);
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    const { password: _, ...userData } = user._doc;
+
+    res.status(201).json({
+      message: "Signup successful!",
+      user: userData,
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
