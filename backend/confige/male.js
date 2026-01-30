@@ -1,9 +1,16 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
+// SAME TEMPLATE (unchanged)
 const otpTemplate = (title, subtitle, otp, color) => `
   <div style="font-family: Arial, sans-serif; background:#f4f6f8; padding:20px;">
     <div style="max-width:520px; margin:auto; background:#fff; padding:25px; border-radius:10px;">
@@ -49,11 +56,12 @@ const otpTemplate = (title, subtitle, otp, color) => `
   </div>
 `;
 
+// SIGNUP MAIL
 export const sendSignupMail = async (to, otp) => {
-  await resend.emails.send({
-    from: 'Vybe Security <onboarding@resend.dev>',
-    to: [to],
-    subject: 'Welcome to Vybe',
+  await transporter.sendMail({
+    from: `"Vybe Security" <${process.env.EMAIL}>`,
+    to,
+    subject: "Welcome to Vybe",
     html: otpTemplate(
       "Welcome to Vybe 🎉",
       "Use the OTP below to verify your account:",
@@ -63,11 +71,12 @@ export const sendSignupMail = async (to, otp) => {
   });
 };
 
+// RESET PASSWORD MAIL
 export const sendResetMail = async (to, otp) => {
-  await resend.emails.send({
-    from: 'Vybe Security <onboarding@resend.dev>',
-    to: [to],
-    subject: 'Reset Your Password',
+  await transporter.sendMail({
+    from: `"Vybe Security" <${process.env.EMAIL}>`,
+    to,
+    subject: "Reset Your Password",
     html: otpTemplate(
       "Reset Password 🔐",
       "Use the OTP below to reset your password:",
