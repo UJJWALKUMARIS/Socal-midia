@@ -43,7 +43,7 @@ const otpTemplate = (title, subtitle, otp, color) => `
 export const sendSignupMail = async (to, otp) => {
   await apiInstance.sendTransacEmail({
     sender: {
-      email: "onboarding@vybe.com",
+      email: "vybe8320@gmail.com",
       name: "Vybe Security"
     },
     to: [{ email: to }],
@@ -60,7 +60,7 @@ export const sendSignupMail = async (to, otp) => {
 export const sendResetMail = async (to, otp) => {
   await apiInstance.sendTransacEmail({
     sender: {
-      email: "onboarding@vybe.com",
+      email: "vybe8320@gmail.com",
       name: "Vybe Security"
     },
     to: [{ email: to }],
