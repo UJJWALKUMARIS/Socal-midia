@@ -11,6 +11,7 @@ import dp from "../assets/dp.jpg"
 import Nav from "../componesnsts/Nav"
 import FollowButon from "../componesnsts/FollowButon"
 import Post from "../componesnsts/Post"
+import LoopCards from "../componesnsts/LoopCards"
 import { setSelectedUser } from "../redux/massageSlice"
 
 function Profile() {
@@ -20,11 +21,16 @@ function Profile() {
 
   const { profileData, userData } = useSelector(state => state.user);
   const { postData } = useSelector(state => state.post);
+  const { loopData } = useSelector(state => state.loop);
 
   const [loading, setLoading] = useState(false);
   const [profileLoading, setProfileLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("posts");
   const [menuOpen, setMenuOpen] = useState(false);
+  
+  // Loop playback state
+  const [currentLoopIndex, setCurrentLoopIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   // LOGOUT
   const logout = async () => {
@@ -86,9 +92,27 @@ function Profile() {
     nav("/conv")
   }
 
+  // Toggle loop playback
+  const handleTogglePlay = () => {
+    setIsPlaying(!isPlaying);
+  };
+
+  // Handle loop update (for real-time updates)
+  const handleLoopUpdate = (updatedLoop) => {
+    // This will be handled by Redux in LoopCards component
+  };
+
   useEffect(() => {
     handleProfile()
   }, [userName])
+
+  useEffect(() => {
+    // Reset loop index when switching to loops tab
+    if (activeTab === "loops") {
+      setCurrentLoopIndex(0);
+      setIsPlaying(false);
+    }
+  }, [activeTab])
 
   if (profileLoading) {
     return (
@@ -104,6 +128,11 @@ function Profile() {
   const savedPostIds = userData?.saved || []
   const savedPosts =
     postData?.filter(p => savedPostIds?.includes(p._id)) || []
+
+  // Filter loops for this user
+  const userLoops = Array.isArray(loopData)
+    ? loopData.filter(l => l.author?._id === profileData?._id)
+    : []
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-b from-black via-[#0b0b0b] to-[#121212] text-white">
@@ -145,7 +174,7 @@ function Profile() {
               </button>
 
               <button
-               onClick={()=>nav("/massage")}
+                onClick={() => nav("/massage")}
                 className="w-full lg:hidden text-left px-4 py-3 text-sm hover:bg-gray-800 transition"
               >
                 Message
@@ -188,6 +217,7 @@ function Profile() {
       <div className="flex justify-center gap-14 mt-8 pb-6 border-b border-gray-800">
         {[
           { label: "Posts", value: userPosts.length },
+          { label: "Loops", value: userLoops.length },
           { label: "Followers", value: profileData?.flowers?.length || 0 },
           { label: "Following", value: profileData?.following?.length || 0 },
         ].map((item, i) => (
@@ -229,7 +259,7 @@ function Profile() {
 
       {/* TABS */}
       <div className="flex justify-center gap-10 mt-4 pb-3 border-b border-gray-800">
-        {["posts", "saved"].map(tab =>
+        {["posts", "loops", "saved"].map(tab =>
           tab === "saved" && profileData?._id !== userData?._id ? null : (
             <button
               key={tab}
@@ -245,22 +275,46 @@ function Profile() {
         )}
       </div>
 
-      {/* POSTS */}
+      {/* CONTENT BASED ON ACTIVE TAB */}
       <div className="flex justify-center min-h-[70vh]">
-        <div className="w-full max-w-[900px] bg-white sm:rounded-t-[30px] pt-4 pb-24">
-
-
-          {(activeTab === "posts" ? userPosts : savedPosts).length > 0 ? (
-            [...(activeTab === "posts" ? userPosts : savedPosts)]
-              .reverse()
-              .map(post => <Post key={post._id} post={post} />)
-          ) : (
-            <div className="text-center text-gray-500 mt-20">
-              No {activeTab} yet
-            </div>
-          )}
-        </div>
+        {activeTab === "loops" ? (
+          // LOOPS SECTION
+          <div className="w-full max-w-[900px] pt-4 pb-24">
+            {userLoops.length > 0 ? (
+              <div className="flex flex-col items-center gap-4">
+                {userLoops.map((loop, index) => (
+                  <LoopCards
+                    key={loop._id}
+                    loop={loop}
+                    isActive={index === currentLoopIndex}
+                    isPlaying={isPlaying && index === currentLoopIndex}
+                    onTogglePlay={handleTogglePlay}
+                    onLoopUpdate={handleLoopUpdate}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center text-gray-500 mt-20">
+                No loops yet
+              </div>
+            )}
+          </div>
+        ) : (
+          // POSTS SECTION
+          <div className="w-full max-w-[900px] bg-white sm:rounded-t-[30px] pt-4 pb-24">
+            {(activeTab === "posts" ? userPosts : savedPosts).length > 0 ? (
+              [...(activeTab === "posts" ? userPosts : savedPosts)]
+                .reverse()
+                .map(post => <Post key={post._id} post={post} />)
+            ) : (
+              <div className="text-center text-gray-500 mt-20">
+                No {activeTab} yet
+              </div>
+            )}
+          </div>
+        )}
       </div>
+
       <div className="w-full flex justify-center">
         <Nav />
       </div>
