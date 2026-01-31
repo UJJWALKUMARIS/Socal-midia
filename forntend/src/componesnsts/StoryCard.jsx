@@ -4,13 +4,14 @@ import dp from "../assets/dp.jpg";
 import axios from "axios";
 import { url } from "../App.jsx";
 import { setViews } from "../redux/storySlice.js";
+import { useNavigate } from "react-router-dom";
 
 function StoryCard({ story, onNext, onPrev, isCurrentUser }) {
     if (!story) return null;
 
     const dispatch = useDispatch();
     const videoRef = useRef(null);
-
+    const navigate = useNavigate();
     const [hasError, setHasError] = useState(false);
     const [isVideoLoaded, setIsVideoLoaded] = useState(false);
     const [progress, setProgress] = useState(0);
@@ -271,7 +272,7 @@ function StoryCard({ story, onNext, onPrev, isCurrentUser }) {
                 </div>
 
                 {/* USER INFO */}
-                <div className="flex items-center px-3 pb-2 bg-gradient-to-b from-black/70 to-transparent">
+                <div className="flex items-center px-3 pb-2 bg-gradient-to-b from-black/70 to-transparent" onClick={()=>navigate(`/profile/${userName}`)}>
                     <img
                         src={profileImage}
                         alt="profile"
