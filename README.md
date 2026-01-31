@@ -325,9 +325,7 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 📞 Contact & Support
 
-- **Email**: [your.email@example.com](mailto:your.email@example.com)
-- **GitHub Issues**: [Report a bug or request a feature](https://github.com/Ujjwal-Kumar6/Socal-midia/issues)
-- **Discussions**: [Join the conversation](https://github.com/Ujjwal-Kumar6/Socal-midia/discussions)
+- **Email**: [uk7320942276@gmail.com](mailto:uk7320942276@gmail.com)
 
 ---
 
