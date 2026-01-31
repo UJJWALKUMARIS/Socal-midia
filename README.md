@@ -75,47 +75,7 @@ It is designed to simulate real-world social media functionality while helping m
 
 ---
 
-## ⚡ Getting Started (Run Locally)
 
-### 1️⃣ Clone the Repository
-```bash
-git clone https://github.com/Ujjwal-Kumar6/Socal-midia.git
-cd Socal-midia
-````
-
----
-
-## ▶️ Backend Setup
-
-```bash
-cd backend
-npm install
-npm start
-```
-
-Backend will run on:
-
-```
-http://localhost:5000
-```
-
----
-
-## ▶️ Frontend Setup (Vite + React)
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Frontend will run on:
-
-```
-http://localhost:5173
-```
-
----
 
 ## 🌍 Live Deployment
 
