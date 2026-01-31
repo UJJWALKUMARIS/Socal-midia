@@ -243,12 +243,12 @@ This project is deployed on [Render](https://render.com/) and is live at:
 - [x] Post creation and feed
 - [x] User profiles
 - [x] Responsive design
-- [ ] Real-time notifications
-- [ ] Direct messaging
-- [ ] Image uploads with cloud storage
-- [ ] Advanced search functionality
-- [ ] Dark mode toggle
-- [ ] Mobile app (React Native)
+- [x] Real-time notifications
+- [x] Direct messaging
+- [x] Image uploads with cloud storage
+- [x] Advanced search functionality
+- [x] Dark mode toggle
+- [x] Mobile app (React Native)
 
 ---
 
