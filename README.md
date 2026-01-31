@@ -1,11 +1,3 @@
-Alright 😎
-Here is the **FULL, COMPLETE, UNIQUE, ALL-IN-ONE `README.md`** for your project **Vybe (Socal-midia)** — **frontend (Vite + React) + backend (Node + Express)**, with badges, live demo, setup, everything in **ONE FILE**.
-
-👉 **Just copy–paste this ENTIRE thing into `README.md`**
-
----
-
-```md
 # 🚀 Vybe — Full-Stack Social Media Web App
 
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow)
@@ -22,8 +14,6 @@ It is designed to simulate real-world social media functionality while helping m
 
 🌍 **Live Demo:**  
 👉 https://vybe-ev36.onrender.com/
-
----
 
 ## ✨ Features
 
