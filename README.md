@@ -227,15 +227,6 @@ This project is deployed on [Render](https://render.com/) and is live at:
 
 ---
 
-## 📸 Screenshots
-
-> **Note:** Add screenshots here to showcase your application's UI and features. This significantly improves the README's appeal to recruiters and contributors.
-
-```
-[Login Page]    [Home Feed]    [User Profile]    [Create Post]
-```
-
----
 
 ## 🎯 Roadmap
 
