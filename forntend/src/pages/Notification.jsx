@@ -79,14 +79,14 @@ function Notification() {
             >
               <img
                 src={n.sender?.profilePic || dp}
-                alt={n.sender.userName}
+                alt={n.sender?.userName}
                 className="w-12 h-12 rounded-full object-cover"
               />
 
               <div className="flex-1">
                 <p className="text-sm">
                   <span className="font-semibold">
-                    {n.sender.userName}
+                    {n.sender?.userName}
                   </span>{" "}
                   {n.message}
                 </p>
