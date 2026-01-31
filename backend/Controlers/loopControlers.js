@@ -179,23 +179,37 @@ export const deleteComment = async (req, res) => {
 };
 
 export const deleteLoop = async (req, res) => {
-    try {
-        const loopId = req.params.loopId;
+  try {
+    const { loopId } = req.params;
 
-        const loop = await Loop.findById(loopId);
-        if (!loop) {
-            return res.status(400).json({ message: 'Loop Not found or already deleted' });
-        }
+    console.log("DELETE REQUEST RECEIVED");
+    console.log("Loop ID:", loopId);
+    console.log("User ID:", req.userId);
 
-        if (loop.author.toString() !== req.userId.toString()) {
-            return res.status(400).json({ message: 'You are not authorized to delete this loop' });
-        }
+    const raw = await Loop.findOne({ _id: loopId });
+    console.log("RAW LOOP:", raw);
 
-        await Loop.findByIdAndDelete(loopId);
-
-        return res.status(200).json({ message: 'Loop deleted successfully' });
-    } catch (error) {
-        console.error("Delete loop error:", error);
-        return res.status(500).json({ message: `Delete loop error: ${error.message}` });
+    if (!raw) {
+      return res.status(404).json({
+        message: "Loop not found in database",
+        loopId
+      });
     }
+
+    if (raw.author.toString() !== req.userId.toString()) {
+      return res.status(403).json({
+        message: "Author mismatch",
+        author: raw.author,
+        user: req.userId
+      });
+    }
+
+    await raw.deleteOne();
+
+    return res.status(200).json({ message: "Loop deleted successfully" });
+
+  } catch (err) {
+    console.error("DELETE ERROR:", err);
+    return res.status(500).json({ message: err.message });
+  }
 };
