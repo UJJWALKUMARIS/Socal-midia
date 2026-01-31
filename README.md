@@ -119,7 +119,7 @@ Contributions are welcome!
 ## 👨‍💻 Author
 
 **Ujjwal Kumar**
-🎓 Class 12 Student | 💻 Full-Stack Web Developer
+🎓 Class 10 Student | 💻 Full-Stack Web Developer
 
 🔗 GitHub: [https://github.com/Ujjwal-Kumar6](https://github.com/Ujjwal-Kumar6)
 
@@ -132,14 +132,3 @@ It motivates me to build more awesome projects like this 🚀
 
 ```
 
----
-
-🔥 If you want next:
-- **Separate frontend & backend README**
-- **API documentation**
-- **Environment variables guide**
-- **Portfolio-style README**
-- **Internship-ready version**
-
-Just tell me — we’ll level this up 💪😎
-```
