@@ -133,7 +133,7 @@ function LoopCards({ loop, isActive, isPlaying, onTogglePlay, onLoopUpdate }) {
 
     setDeleteLoading(true);
     try {
-      await axios.delete(`${url}/api/loop/${currentLoop._id}`, {
+      await axios.delete(`${url}/api/loop/delete/${currentLoop._id}`, {
         withCredentials: true,
       });
 
