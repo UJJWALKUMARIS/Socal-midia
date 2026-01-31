@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState } from "react";
 import dp from "../assets/dp.jpg";
 import { useNavigate } from "react-router-dom";
 import { FaPlay, FaRegComment } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 import FollowButon from "./FollowButon";
 import { useDispatch, useSelector } from "react-redux";
 import { GoHeart, GoHeartFill } from "react-icons/go";
@@ -24,19 +25,21 @@ function LoopCards({ loop, isActive, isPlaying, onTogglePlay, onLoopUpdate }) {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
 
-  // 🆕 Loading states
+  // Loading states
   const [videoLoading, setVideoLoading] = useState(true);
   const [likeLoading, setLikeLoading] = useState(false);
   const [commentLoading, setCommentLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  // ✅ Get the current loop from Redux to reflect real-time updates
+  // Get the current loop from Redux to reflect real-time updates
   const currentLoop = Array.isArray(loopData)
     ? loopData.find((l) => l._id === loop._id) || loop
     : loop;
 
-  const isOtherUser = userData?._id !== currentLoop?.author?._id;
+  const isOwnLoop = userData?._id === currentLoop?.author?._id;
+  const isOtherUser = !isOwnLoop;
 
   const handleTimeUpdate = () => {
     const video = videoRef.current;
@@ -59,7 +62,7 @@ function LoopCards({ loop, isActive, isPlaying, onTogglePlay, onLoopUpdate }) {
   };
 
   const like = async () => {
-    if (likeLoading) return; // Prevent multiple clicks
+    if (likeLoading) return;
     setLikeLoading(true);
     try {
       const result = await axios.get(`${url}/api/loop/likes/${currentLoop._id}`, {
@@ -112,7 +115,7 @@ function LoopCards({ loop, isActive, isPlaying, onTogglePlay, onLoopUpdate }) {
         { withCredentials: true }
       );
       updateLoopData(result.data);
-      setCommentText(""); // ✅ Clear input immediately
+      setCommentText("");
     } catch (error) {
       console.log("Comment error:", error);
     } finally {
@@ -120,10 +123,48 @@ function LoopCards({ loop, isActive, isPlaying, onTogglePlay, onLoopUpdate }) {
     }
   };
 
+  // Delete loop functionality
+  const handleDeleteLoop = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this loop? This action cannot be undone!"
+    );
+
+    if (!confirmDelete) return;
+
+    setDeleteLoading(true);
+    try {
+      await axios.delete(`${url}/api/loop/${currentLoop._id}`, {
+        withCredentials: true,
+      });
+
+      // Remove from Redux state
+      if (Array.isArray(loopData)) {
+        const updatedLoops = loopData.filter((l) => l._id !== currentLoop._id);
+        dispatch(setLoopData(updatedLoops));
+      }
+
+      // Navigate back to previous page or home
+      navigate(-1);
+    } catch (error) {
+      console.error("Delete loop error:", error);
+      alert("Failed to delete loop. Please try again.");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  // Navigate to the loop creator's profile
+  const handleLoopClick = (e) => {
+    e.stopPropagation();
+    if (currentLoop?.author?._id) {
+      navigate(`/profile/${currentLoop.author.userName}`);
+    }
+  };
+
   useEffect(() => {
     if (!videoRef.current) return;
     if (isActive && isPlaying) {
-      videoRef.current.play().catch(() => { });
+      videoRef.current.play().catch(() => {});
     } else {
       videoRef.current.pause();
     }
@@ -140,7 +181,7 @@ function LoopCards({ loop, isActive, isPlaying, onTogglePlay, onLoopUpdate }) {
     }
   }, [showComments, currentLoop?.comments]);
 
-  // ✅ Socket listeners with proper state updates
+  // Socket listeners with proper state updates
   useEffect(() => {
     if (!sockets) return;
 
@@ -182,7 +223,7 @@ function LoopCards({ loop, isActive, isPlaying, onTogglePlay, onLoopUpdate }) {
         onClick={onTogglePlay}
         onDoubleClick={handleDoubleClick}
       >
-        {/* 🆕 Video Loading Spinner */}
+        {/* Video Loading Spinner */}
         {videoLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black z-10">
             <div className="flex flex-col items-center gap-3">
@@ -238,23 +279,41 @@ function LoopCards({ loop, isActive, isPlaying, onTogglePlay, onLoopUpdate }) {
           ></div>
         </div>
 
-        {/* Follow button */}
-        {isOtherUser && (
+        {/* Follow button OR Delete button */}
+        {isOtherUser ? (
           <FollowButon
             targatUserId={currentLoop?.author?._id}
             tailwind="absolute bottom-[130px] left-4 bg-gradient-to-r from-pink-500 to-orange-400 
                       text-white px-5 py-2 rounded-full font-semibold text-sm shadow-lg 
                       hover:opacity-90 active:scale-95 transition-all duration-200"
           />
+        ) : (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteLoop();
+            }}
+            disabled={deleteLoading}
+            className="absolute bottom-[130px] left-4 bg-red-600 hover:bg-red-700
+                      text-white px-5 py-2 rounded-full font-semibold text-sm shadow-lg 
+                      active:scale-95 transition-all duration-200 flex items-center gap-2
+                      disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {deleteLoading ? (
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <>
+                <MdDelete size={18} />
+                Delete
+              </>
+            )}
+          </button>
         )}
 
         {/* Author info */}
         <div
           className="absolute bottom-[80px] left-4 flex items-center gap-3 cursor-pointer"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/profile/${currentLoop?.author?.userName}`);
-          }}
+          onClick={handleLoopClick}
         >
           <img
             src={currentLoop?.author?.profilePic || dp}
