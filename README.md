@@ -118,12 +118,14 @@ Contributions are welcome!
 
 ## 👨‍💻 Author
 
-**Ujjwal Kumar**
-🎓 Class 10 Student | 💻 Full-Stack Web Developer
+**Ujjwal Kumar**  
+🎓 Class 10 Student | 💻 Full-Stack Web Developer  
+🛠️ Built this application while studying in **Class 10 (Jan 2026)**
 
-🔗 GitHub: [https://github.com/Ujjwal-Kumar6](https://github.com/Ujjwal-Kumar6)
+🔗 GitHub: https://github.com/Ujjwal-Kumar6
 
 ---
+
 
 ## ⭐ Support
 
