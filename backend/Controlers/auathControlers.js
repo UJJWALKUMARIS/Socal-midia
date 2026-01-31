@@ -133,7 +133,7 @@ export const signIn = async (req, res) => {
    SIGNOUT
 ========================= */
 export const signOut = (req, res) => {
-  res.clearCookie("token"{
+  res.clearCookie("token",{
     httpOnly: true,
     sameSite: "None",
     secure: true,
