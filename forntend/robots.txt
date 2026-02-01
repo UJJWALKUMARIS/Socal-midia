@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vybe-ev36.onrender.com/sitemap.xml
