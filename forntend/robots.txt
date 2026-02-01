@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
+# Sitemap location
 Sitemap: https://vybe-ev36.onrender.com/sitemap.xml
